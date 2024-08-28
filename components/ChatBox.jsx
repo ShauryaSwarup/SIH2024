@@ -8,7 +8,7 @@ import { MoodHappy, Send } from "tabler-icons-react";
 const ChatBox = ({ fn, id, ruid, addMessage }) => {
 	const [value, setValue] = useState("");
 	const [user] = useState({
-		uid: "user1", // Example user ID
+		uid: "user", // Example user ID
 		photoURL: "https://example.com/photo1.jpg", // Example user photo
 	});
 
