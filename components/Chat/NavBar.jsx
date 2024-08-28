@@ -8,10 +8,19 @@ import {
 	UnstyledButton,
 } from "@mantine/core";
 import { MessageCircle } from "tabler-icons-react";
-// import DarkMode from "./DarkMode";
-// import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 const NavBar = () => {
+	const { data: session, status } = useSession();
+
+	if (status === "loading") {
+		return <div>Loading...</div>;
+	}
+
+	if (!session) {
+		return <div>Please sign in to access the chat.</div>;
+	}
+
 	return (
 		<Paper
 			radius={0}
@@ -29,7 +38,7 @@ const NavBar = () => {
 				<Avatar
 					// component={Link}
 					to={`/user/1`} // Replace with hardcoded user ID
-					src="https://via.placeholder.com/150" // Replace with hardcoded photo URL
+					src={session.user.image} // Replace with hardcoded photo URL
 					radius="xl"
 				/>
 				<Text
@@ -38,7 +47,7 @@ const NavBar = () => {
 				>
 					<Group align="center" noWrap spacing={3}>
 						<UnstyledButton>
-							<Title>Hermes</Title>
+							<Title>{session.user.name}</Title>
 						</UnstyledButton>
 						<MessageCircle color="#4dabf7" size={30} />
 					</Group>

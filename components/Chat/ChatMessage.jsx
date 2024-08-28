@@ -2,6 +2,7 @@ import {
 	ActionIcon,
 	Alert,
 	Avatar,
+	Card,
 	Collapse,
 	Group,
 	Stack,
@@ -104,6 +105,38 @@ export default function ChatMessage({
 						{msgDate}
 					</Text>
 				</Collapse>
+				{message.type === "table" && (
+					<Card shadow="xs" padding="md" radius="md" style={{ marginTop: "8px" }}>
+						<table>
+							<tbody>
+								<tr>
+									<td>Category 1:</td>
+									<td>
+										<input type="text" />
+									</td>
+								</tr>
+								<tr>
+									<td>Category 2:</td>
+									<td>
+										<input type="text" />
+									</td>
+								</tr>
+								<tr>
+									<td>Category 3:</td>
+									<td>
+										<input type="text" />
+									</td>
+								</tr>
+								<tr>
+									<td>Category 4:</td>
+									<td>
+										<input type="text" />
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</Card>
+				)}
 			</Stack>
 		</Group>
 	);
