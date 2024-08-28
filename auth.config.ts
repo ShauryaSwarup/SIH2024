@@ -11,9 +11,9 @@ export default {
           email: profile.email,
           image: profile.picture,
           role: profile.role ?? "user",
-          bookings: profile.bookings,
         };
       },
+      allowDangerousEmailAccountLinking: true,
     }),
   ],
 } satisfies NextAuthConfig;

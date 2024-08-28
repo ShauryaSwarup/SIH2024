@@ -13,7 +13,7 @@ async function page() {
         <>
           <UserAvatar />
           <SignOut />
-          <div>{session.user.role}</div>
+          <div>{session.user.id}</div>
         </>
       ) : (
         <SignIn />
