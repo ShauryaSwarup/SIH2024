@@ -1,9 +1,26 @@
-"use client";
-import  ChatRoom from "@/components/ChatRoom";
+import { auth } from "@/auth";
+import ChatRoom from "@/components/ChatRoom";
+import SignIn from "@/components/SignIn/SignIn";
+import { SignOut } from "@/components/SignOut/SignOut";
+import UserAvatar from "@/components/User/UserAvatar";
 import React from "react";
 
-function page() {
-	return <div className=" bg-black text-blue-50">hello</div>
+async function page() {
+  const session = await auth();
+  return (
+    <>
+      {session ? (
+        <>
+          <UserAvatar />
+          <SignOut />
+          <div>{session.user.role}</div>
+        </>
+      ) : (
+        <SignIn />
+      )}
+      <div className=" bg-black text-blue-50">hello</div>
+    </>
+  );
 }
 
 export default page;
