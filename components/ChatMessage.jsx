@@ -4,11 +4,9 @@ import {
 	Avatar,
 	Collapse,
 	Group,
-	Loader,
-	Menu,
 	Stack,
 	Text,
-	TooltipFloating,
+	Tooltip,
 } from "@mantine/core";
 import { useState } from "react";
 import { CornerUpLeft, Trash } from "tabler-icons-react";
@@ -40,54 +38,69 @@ export default function ChatMessage({
 		console.log("Reply clicked");
 	};
 
+	// Determine alignment based on user ID
+	const isUserMessage = uid === "user"; // Assuming "user" is the current user's ID
+
 	return (
 		<Group
-			position={uid === "user1" ? "right" : "left"} // Example logic for alignment
+			justify={isUserMessage ? "right" : "left"} // Align based on message source
 			align="flex-end"
 			noWrap
+			style={{ marginBottom: "8px" }}
 		>
-			<Stack p={0} spacing={2} style={{ maxWidth: "80%" }} align="flex-end">
-				<Group position="right" align="flex-end" spacing="xs">
-					<TooltipFloating label={uid} position="right">
-						<Avatar src={photoURL} radius="xl" hidden={uid === "user1"} />
-					</TooltipFloating>
-
-					<Stack p={0} spacing={0} m={0}>
-						<Stack p={0} spacing={0} m={0} hidden={deleted || !repliedTo}>
-							<Group
-								align="center"
-								position="left"
-								style={{ position: "relative", bottom: -8 }}
-								p={0}
-								spacing={0}
-								m={0}
-								noWrap
-							>
-							</Group>
-						</Stack>
-						<Group position="left" spacing={3} align="center" noWrap>
-							<Alert
-								color={color || "blue"}
-								radius="lg"
-								py={8}
-								variant={deleted ? "outline" : "light"}
-								onClick={() => {
-									setOpen((o) => !o);
-								}}
-							>
-								{deleted ? (
-									<Text color={color || "blue"} size="xs">
-										Message removed
-									</Text>
-								) : (
-									text
-								)}
-							</Alert>
-						</Group>
-					</Stack>
+			{!isUserMessage && photoURL && (
+				<Tooltip label={uid} position="right">
+					<Avatar src={photoURL} radius="xl" />
+				</Tooltip>
+			)}
+			<Stack
+				p={0}
+				spacing={2}
+				style={{ maxWidth: "80%" }}
+				align={isUserMessage ? "flex-end" : "flex-start"}
+			>
+				<Stack p={0} spacing={0} m={0} hidden={deleted || !repliedTo}>
+					<Group
+						align="center"
+						justify={isUserMessage ? "right" : "left"}
+						style={{ position: "relative", bottom: -8 }}
+						p={0}
+						spacing={0}
+						m={0}
+						noWrap
+					>
+						{/* Optional reply UI */}
+					</Group>
+				</Stack>
+				<Group
+					justify={isUserMessage ? "right" : "left"}
+					spacing={3}
+					align="center"
+					noWrap
+				>
+					<Alert
+						color={color || "blue"}
+						radius="lg"
+						py={8}
+						variant={deleted ? "outline" : "light"}
+						onClick={() => setOpen((o) => !o)}
+						style={{ textAlign: isUserMessage ? "right" : "left" }}
+					>
+						{deleted ? (
+							<Text color={color || "blue"} size="xs">
+								Message removed
+							</Text>
+						) : (
+							text
+						)}
+					</Alert>
 				</Group>
 				<Collapse in={open} px="xs">
-					<Text size="xs" align="left" color="dimmed">
+					<Text
+						size="xs"
+						align={isUserMessage ? "right" : "left"}
+						color="dimmed"
+					>
 						{msgDate}
 					</Text>
 				</Collapse>
