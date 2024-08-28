@@ -1,5 +1,4 @@
 import { auth } from "@/auth";
-import ChatRoom from "@/components/ChatRoom";
 import SignIn from "@/components/SignIn/SignIn";
 import { SignOut } from "@/components/SignOut/SignOut";
 import UserAvatar from "@/components/User/UserAvatar";

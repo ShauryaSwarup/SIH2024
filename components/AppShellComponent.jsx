@@ -1,12 +1,13 @@
-"use client"
+"use client";
 import { AppShell, Burger, Group, UnstyledButton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 // import { MantineLogo } from "@mantinex/mantine-logo";
 import classes from "./MobileNavbar.module.css";
+import ProfileBrief from "./ProfileBrief";
 
-export function AppShellComponent({children}) {
+export async function AppShellComponent({ children }) {
+	const session = await auth();
 	const [opened, { toggle }] = useDisclosure();
-
 	return (
 		<AppShell
 			header={{ height: 60 }}
@@ -22,7 +23,10 @@ export function AppShellComponent({children}) {
 					<Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
 					<Group justify="space-between" style={{ flex: 1 }}>
 						{/* <MantineLogo size={30} /> */}
-						<Group ml="xl" gap={0} visibleFrom="sm">
+						<UnstyledButton className={classes.navbarButton}>
+							Sarathi
+						</UnstyledButton>
+						<Group ml="xl" gap={20} visibleFrom="sm">
 							<UnstyledButton className={classes.control}>Home</UnstyledButton>
 							<UnstyledButton className={classes.control}>Blog</UnstyledButton>
 							<UnstyledButton className={classes.control}>
@@ -31,6 +35,7 @@ export function AppShellComponent({children}) {
 							<UnstyledButton className={classes.control}>
 								Support
 							</UnstyledButton>
+							<ProfileBrief className={classes.control} />
 						</Group>
 					</Group>
 				</Group>
@@ -43,9 +48,7 @@ export function AppShellComponent({children}) {
 				<UnstyledButton className={classes.control}>Support</UnstyledButton>
 			</AppShell.Navbar>
 
-			<AppShell.Main>
-				{children}
-			</AppShell.Main>
+			<AppShell.Main>{children}</AppShell.Main>
 		</AppShell>
 	);
 }
