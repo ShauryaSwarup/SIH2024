@@ -14,6 +14,7 @@ export default {
           bookings: profile.bookings,
         };
       },
+      allowDangerousEmailAccountLinking: true,
     }),
   ],
 } satisfies NextAuthConfig;
