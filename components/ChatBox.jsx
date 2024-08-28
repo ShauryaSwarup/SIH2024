@@ -1,3 +1,4 @@
+"use client"
 import { ActionIcon, Group, Stack, TextInput } from "@mantine/core";
 import { getHotkeyHandler } from "@mantine/hooks";
 import { useState } from "react";
@@ -41,8 +42,7 @@ const ChatBox = ({ fn, id, ruid, addMessage }) => {
 
 	return (
 		<Stack
-			sx={{ height: "8vh" }}
-			style={{ backgroundColor: "lightyellow" }}
+			style={{ height: "8vh" }}
 			justify="center"
 			p={0}
 		>
@@ -50,7 +50,7 @@ const ChatBox = ({ fn, id, ruid, addMessage }) => {
 				<TextInput
 					value={value}
 					onChange={(event) => setValue(event.currentTarget.value)}
-					sx={{ flexGrow: 1 }}
+					style={{ flexGrow: 1 }}
 					placeholder="Say something nice . . . "
 					rightSection={
 						<ActionIcon

@@ -1,213 +1,97 @@
-import React, { useState } from "react";
 import {
+	ActionIcon,
+	Alert,
 	Avatar,
+	Collapse,
 	Group,
+	Loader,
+	Menu,
 	Stack,
 	Text,
-	Alert,
-	Collapse,
-	ActionIcon,
-	Menu,
+	TooltipFloating,
 } from "@mantine/core";
-import { CornerUpLeft, Trash, DotsVertical } from "tabler-icons-react";
-import dayjs from "dayjs";
-import calendar from "dayjs/plugin/calendar";
-import toast from "react-hot-toast";
+import { useState } from "react";
+import { CornerUpLeft, Trash } from "tabler-icons-react";
 
-dayjs.extend(calendar);
-
-const ChatMessage = (props) => {
+export default function ChatMessage({
+	message, // This will be the message object passed from ChatRoom
+}) {
 	const {
 		text,
 		uid,
 		photoURL,
-		createdAt,
-		id,
 		deleted,
 		repliedTo,
 		ruid,
 		rtext,
-	} = props.message;
+		color,
+		msgDate,
+	} = message; // Destructure the message object
 
-	const [msgDate, setMsgDate] = useState("");
-	const [hovered, setHovered] = useState(false);
-	const [opened, setOpen] = useState(false);
-	const [repDel, setRepDel] = useState(false);
+	const [open, setOpen] = useState(false);
 
-	useState(() => {
-		if (createdAt != null) {
-			conditions();
-		} else {
-			setMsgDate("Just now");
-		}
-	}, [createdAt]);
+	const deleteMe = () => {
+		// Functionality for delete
+		console.log("Message deleted");
+	};
 
-	function conditions() {
-		if (dayjs().diff(dayjs.unix(createdAt.seconds), "h") > 48) {
-			setMsgDate(dayjs.unix(createdAt.seconds).format("MMMM D, YYYY h:mm A"));
-		} else {
-			setMsgDate(dayjs.unix(createdAt.seconds).calendar());
-		}
-	}
-
-	function deleteMe() {
-		if (uid === "user1") {
-			// Replace with your hardcoded user ID
-			// Simulate deletion
-			setRepDel(true);
-		} else {
-			toast.error("This is not yours.");
-		}
-	}
-
-	function reply() {
-		props.replyMessage({ msgId: id, senderUid: uid, msgText: text });
-	}
-
-	const message = uid === "user1" ? "right" : "left"; // Replace 'user1' with the current user ID
-	let color = message === "right" ? "yellow" : "indigo";
+	const reply = () => {
+		// Functionality for reply
+		console.log("Reply clicked");
+	};
 
 	return (
 		<Group
-			onMouseEnter={() => setHovered(true)}
-			onMouseLeave={() => setHovered(false)}
-			position={message}
+			position={uid === "user1" ? "right" : "left"} // Example logic for alignment
 			align="flex-end"
 			noWrap
 		>
-			<Stack
-				p={0}
-				spacing={2}
-				sx={{ maxWidth: "80%" }}
-				align="flex-end"
-				style={{ backgroundColor: "lightgreen" }}
-			>
-				<Group position={message} align="flex-end" spacing="xs">
-					<Avatar src={photoURL} radius="xl" hidden={message === "right"} />
+			<Stack p={0} spacing={2} style={{ maxWidth: "80%" }} align="flex-end">
+				<Group position="right" align="flex-end" spacing="xs">
+					<TooltipFloating label={uid} position="right">
+						<Avatar src={photoURL} radius="xl" hidden={uid === "user1"} />
+					</TooltipFloating>
+
 					<Stack p={0} spacing={0} m={0}>
-						<Stack
-							p={0}
-							spacing={0}
-							m={0}
-							hidden={deleted === undefined ? repliedTo === undefined : true}
-						>
+						<Stack p={0} spacing={0} m={0} hidden={deleted || !repliedTo}>
 							<Group
 								align="center"
-								position={message}
+								position="left"
 								style={{ position: "relative", bottom: -8 }}
 								p={0}
 								spacing={0}
 								m={0}
 								noWrap
 							>
-								<CornerUpLeft size={15} />
-								<Text size="xs" align={message} p={0}>
-									{uid === "user1" ? "You" : "Sender"} replied to{" "}
-									{ruid === uid ? "yourself" : "someone"}
-								</Text>
-							</Group>
-							<Group position={message}>
-								<Alert
-									sx={{ bottom: "-10px", zIndex: -1 }}
-									color="gray"
-									variant={repDel === false ? "light" : "outline"}
-									radius="lg"
-									py={8}
-								>
-									{repDel === false ? (
-										rtext
-									) : (
-										<Text color="gray" size="xs">
-											Message removed
-										</Text>
-									)}
-								</Alert>
 							</Group>
 						</Stack>
-						<Group position={message} spacing={3} align="center" noWrap>
-							{hovered ? (
-								<Menu
-									position="top"
-									placement="center"
-									size="xs"
-									hidden={message === "left"}
-									control={
-										<ActionIcon radius="xl" color="dark">
-											<DotsVertical size={20} />
-										</ActionIcon>
-									}
-								>
-									<Menu.Item
-										onClick={() => deleteMe()}
-										color="red"
-										icon={<Trash size={14} />}
-									>
-										Delete
-									</Menu.Item>
-									<Menu.Item
-										onClick={() => reply()}
-										icon={<CornerUpLeft size={14} />}
-									>
-										Reply
-									</Menu.Item>
-								</Menu>
-							) : null}
+						<Group position="left" spacing={3} align="center" noWrap>
 							<Alert
-								sx={{}}
-								color={color}
+								color={color || "blue"}
 								radius="lg"
 								py={8}
-								variant={deleted === undefined ? "light" : "outline"}
+								variant={deleted ? "outline" : "light"}
 								onClick={() => {
 									setOpen((o) => !o);
 								}}
 							>
-								{deleted === undefined ? (
-									text
-								) : (
-									<Text color={color} size="xs">
+								{deleted ? (
+									<Text color={color || "blue"} size="xs">
 										Message removed
 									</Text>
+								) : (
+									text
 								)}
 							</Alert>
-							{hovered ? (
-								<Menu
-									position="top"
-									placement="center"
-									hidden={message === "right"}
-									size="xs"
-									control={
-										<ActionIcon radius="xl" color="dark">
-											<DotsVertical size={20} />
-										</ActionIcon>
-									}
-								>
-									<Menu.Item
-										onClick={() => deleteMe()}
-										color="red"
-										icon={<Trash size={14} />}
-									>
-										Delete
-									</Menu.Item>
-									<Menu.Item
-										onClick={() => reply()}
-										icon={<CornerUpLeft size={14} />}
-									>
-										Reply
-									</Menu.Item>
-								</Menu>
-							) : null}
 						</Group>
 					</Stack>
 				</Group>
-				<Collapse in={opened} px="xs">
-					<Text size="xs" align={message} color="dimmed">
+				<Collapse in={open} px="xs">
+					<Text size="xs" align="left" color="dimmed">
 						{msgDate}
 					</Text>
 				</Collapse>
 			</Stack>
 		</Group>
 	);
-};
-
-export default ChatMessage;
+}
