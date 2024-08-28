@@ -3,11 +3,11 @@ import { AppShell, Burger, Group, UnstyledButton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 // import { MantineLogo } from "@mantinex/mantine-logo";
 import classes from "./MobileNavbar.module.css";
-import ProfileBrief from "./ProfileBrief";
+import Link from "next/link";
 
-export async function AppShellComponent({ children }) {
-	const session = await auth();
+export function AppShellComponent({ children }) {
 	const [opened, { toggle }] = useDisclosure();
+
 	return (
 		<AppShell
 			header={{ height: 60 }}
@@ -27,23 +27,34 @@ export async function AppShellComponent({ children }) {
 							Sarathi
 						</UnstyledButton>
 						<Group ml="xl" gap={20} visibleFrom="sm">
-							<UnstyledButton className={classes.control}>Home</UnstyledButton>
-							<UnstyledButton className={classes.control}>Blog</UnstyledButton>
+							<Link href="/calendar" passHref>
+								<UnstyledButton className={classes.control}>
+									Calendar
+								</UnstyledButton>
+							</Link>
+							<Link href="/chat" passHref>
+								<UnstyledButton className={classes.control}>
+									Chat
+								</UnstyledButton>
+							</Link>
 							<UnstyledButton className={classes.control}>
 								Contacts
 							</UnstyledButton>
 							<UnstyledButton className={classes.control}>
 								Support
 							</UnstyledButton>
-							<ProfileBrief className={classes.control} />
 						</Group>
 					</Group>
 				</Group>
 			</AppShell.Header>
 
 			<AppShell.Navbar py="md" px={4}>
-				<UnstyledButton className={classes.control}>Home</UnstyledButton>
-				<UnstyledButton className={classes.control}>Blog</UnstyledButton>
+				<Link href="/calendar" passHref>
+					<UnstyledButton className={classes.control}>Calendar</UnstyledButton>
+				</Link>
+				<Link href="/chat" passHref>
+					<UnstyledButton className={classes.control}>Chat</UnstyledButton>
+				</Link>
 				<UnstyledButton className={classes.control}>Contacts</UnstyledButton>
 				<UnstyledButton className={classes.control}>Support</UnstyledButton>
 			</AppShell.Navbar>
