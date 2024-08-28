@@ -1,10 +1,11 @@
-"use client"
+"use client";
 import { AppShell, Burger, Group, UnstyledButton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 // import { MantineLogo } from "@mantinex/mantine-logo";
 import classes from "./MobileNavbar.module.css";
+import Link from "next/link";
 
-export function AppShellComponent({children}) {
+export function AppShellComponent({ children }) {
 	const [opened, { toggle }] = useDisclosure();
 
 	return (
@@ -22,9 +23,20 @@ export function AppShellComponent({children}) {
 					<Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
 					<Group justify="space-between" style={{ flex: 1 }}>
 						{/* <MantineLogo size={30} /> */}
-						<Group ml="xl" gap={0} visibleFrom="sm">
-							<UnstyledButton className={classes.control}>Home</UnstyledButton>
-							<UnstyledButton className={classes.control}>Blog</UnstyledButton>
+						<UnstyledButton className={classes.navbarButton}>
+							Sarathi
+						</UnstyledButton>
+						<Group ml="xl" gap={20} visibleFrom="sm">
+							<Link href="/calendar" passHref>
+								<UnstyledButton className={classes.control}>
+									Calendar
+								</UnstyledButton>
+							</Link>
+							<Link href="/chat" passHref>
+								<UnstyledButton className={classes.control}>
+									Chat
+								</UnstyledButton>
+							</Link>
 							<UnstyledButton className={classes.control}>
 								Contacts
 							</UnstyledButton>
@@ -37,15 +49,17 @@ export function AppShellComponent({children}) {
 			</AppShell.Header>
 
 			<AppShell.Navbar py="md" px={4}>
-				<UnstyledButton className={classes.control}>Home</UnstyledButton>
-				<UnstyledButton className={classes.control}>Blog</UnstyledButton>
+				<Link href="/calendar" passHref>
+					<UnstyledButton className={classes.control}>Calendar</UnstyledButton>
+				</Link>
+				<Link href="/chat" passHref>
+					<UnstyledButton className={classes.control}>Chat</UnstyledButton>
+				</Link>
 				<UnstyledButton className={classes.control}>Contacts</UnstyledButton>
 				<UnstyledButton className={classes.control}>Support</UnstyledButton>
 			</AppShell.Navbar>
 
-			<AppShell.Main>
-				{children}
-			</AppShell.Main>
+			<AppShell.Main>{children}</AppShell.Main>
 		</AppShell>
 	);
 }
