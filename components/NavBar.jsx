@@ -1,0 +1,52 @@
+import React from "react";
+import {
+	Avatar,
+	Group,
+	Paper,
+	Text,
+	Title,
+	UnstyledButton,
+} from "@mantine/core";
+import { MessageCircle } from "tabler-icons-react";
+// import DarkMode from "./DarkMode";
+// import Link from "next/link";
+
+const NavBar = () => {
+	return (
+		<Paper
+			radius={0}
+			style={{ boxShadow: "0px 2px 0px 0px rgba(173,181,189,.5)" }}
+			// style={{ backgroundColor: "lightblue" }}
+		>
+			<Group
+				position="apart"
+				p="sm"
+				align="center"
+				justify="center"
+				style={{ height: "10vh", alignItems: "center" }}
+				noWrap
+			>
+				<Avatar
+					// component={Link}
+					to={`/user/1`} // Replace with hardcoded user ID
+					src="https://via.placeholder.com/150" // Replace with hardcoded photo URL
+					radius="xl"
+				/>
+				<Text
+					variant="gradient"
+					gradient={{ from: "grape", to: "cyan", deg: 90 }}
+				>
+					<Group align="center" noWrap spacing={3}>
+						<UnstyledButton>
+							<Title>Hermes</Title>
+						</UnstyledButton>
+						<MessageCircle color="#4dabf7" size={30} />
+					</Group>
+				</Text>
+				{/* <DarkMode /> */}
+			</Group>
+		</Paper>
+	);
+};
+
+export default NavBar;
