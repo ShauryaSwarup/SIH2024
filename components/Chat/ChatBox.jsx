@@ -1,15 +1,16 @@
-"use client"
 import { ActionIcon, Group, Stack, TextInput } from "@mantine/core";
 import { getHotkeyHandler } from "@mantine/hooks";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { MoodHappy, Send } from "tabler-icons-react";
 
-const ChatBox = ({ fn, id, ruid, addMessage }) => {
+const ChatBox = ({ fn, id, ruid, addMessage, onUserMessage }) => {
 	const [value, setValue] = useState("");
+	const { data: session, status } = useSession();
 	const [user] = useState({
 		uid: "user", // Example user ID
-		photoURL: "https://example.com/photo1.jpg", // Example user photo
+		photoURL: session.user.picture, // Example user photo
 	});
 
 	const sendMessage = () => {
@@ -30,8 +31,8 @@ const ChatBox = ({ fn, id, ruid, addMessage }) => {
 					rtext: ruid ? ruid.msgText : null,
 				};
 
-				// Add the new message to the parent component's state
-				addMessage(newMessage);
+				// Call the onUserMessage function passed as a prop
+				onUserMessage(value);
 
 				// Clear the input field and scroll to the bottom
 				setValue("");
@@ -40,12 +41,12 @@ const ChatBox = ({ fn, id, ruid, addMessage }) => {
 		}
 	};
 
+	if (!session) {
+		return <div>Please sign in to access the chat.</div>;
+	}
+
 	return (
-		<Stack
-			style={{ height: "8vh" }}
-			justify="center"
-			p={0}
-		>
+		<Stack style={{ height: "8vh" }} justify="center" p={0}>
 			<Group position="right" p="xs">
 				<TextInput
 					value={value}
