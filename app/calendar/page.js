@@ -1,10 +1,12 @@
 import Calendar from "./calendar";
+import { auth } from "@/auth";
 
-export default function Page() {
+export default async function page() {
+  const session = await auth();
+
   return (
     <div>
-      <h1>Testing this cutie</h1>
-      <Calendar />
+      <Calendar session={session} />
     </div>
   );
 }

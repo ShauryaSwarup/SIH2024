@@ -7,7 +7,9 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 
-const Calendar = () => {
+const Calendar = (session) => {
+  console.log(session.session);
+
   const [weekendsVisible, setWeekendsVisible] = useState(true);
   const [currentEvents, setCurrentEvents] = useState([]);
 
@@ -50,7 +52,7 @@ const Calendar = () => {
       },
     });
 
-    if (!title) return null; 
+    if (!title) return null;
 
     const { value: startTime } = await Swal.fire({
       title: "Enter event start time",
@@ -65,7 +67,7 @@ const Calendar = () => {
       },
     });
 
-    if (!startTime) return null; 
+    if (!startTime) return null;
 
     const { value: endTime } = await Swal.fire({
       title: "Enter event end time",
@@ -80,7 +82,7 @@ const Calendar = () => {
       },
     });
 
-    if (!endTime) return null; 
+    if (!endTime) return null;
 
     return { title, startTime, endTime };
   };
@@ -96,12 +98,22 @@ const Calendar = () => {
     calendarApi.unselect();
 
     if (title) {
+      const event = {
+        title,
+        description: "",
+        startDate: selectInfo.startStr.split("T")[0],
+        endDate: selectInfo.endStr.split("T")[0],
+        startTime,
+        endTime,
+      };
+
       calendarApi.addEvent({
         title,
         start: selectInfo.startStr + "T" + startTime,
         end: selectInfo.endStr + "T" + endTime,
         allDay: selectInfo.allDay,
       });
+
       setCurrentEvents([
         ...currentEvents,
         {
@@ -112,6 +124,66 @@ const Calendar = () => {
       ]);
     }
   }
+
+  // const handleDateSelect = async (selectInfo) => {
+  //   console.log(selectInfo);
+  //   const eventDetails = await getEventDetails();
+  //   if (!eventDetails) return;
+  //   const { title, startTime, endTime } = eventDetails;
+  //   console.log(title, startTime, endTime);
+
+  //   let calendarApi = selectInfo.view.calendar;
+  //   calendarApi.unselect();
+
+  //   if (title) {
+  //     const event = {
+  //       title,
+  //       description: "", // Include if you have a description field
+  //       startDate: selectInfo.startStr.split("T")[0], // Extract date part
+  //       endDate: selectInfo.endStr.split("T")[0], // Extract date part
+  //       startTime,
+  //       endTime,
+  //     };
+
+  //     // Add event to calendar
+  //     calendarApi.addEvent({
+  //       title,
+  //       start: selectInfo.startStr + "T" + startTime,
+  //       end: selectInfo.endStr + "T" + endTime,
+  //       allDay: selectInfo.allDay,
+  //     });
+
+  //     setCurrentEvents([...currentEvents, event]);
+
+  //     // Send event to the server
+  //     try {
+  //       const response = await fetch("/api/events/add-event", {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify(event),
+  //       });
+  //       if (!response.ok) {
+  //         throw new Error("Failed to create event");
+  //       }
+  //       const result = await response.json();
+  //       console.log(result.message);
+  //       Swal.fire({
+  //         icon: "success",
+  //         title: "Event Created",
+  //         text: "Your event has been successfully created.",
+  //       });
+  //     } catch (error) {
+  //       console.error("Error:", error);
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "Oops...",
+  //         text: "Failed to create event.",
+  //       });
+  //     }
+  //   }
+  // };
 
   let todayStr = new Date().toISOString().replace(/T.*$/, ""); // YYYY-MM-DD of today
   const INITIAL_EVENTS = [
@@ -139,7 +211,6 @@ const Calendar = () => {
           height: "100%",
           fontFamily: "Arial, Helvetica Neue, Helvetica, sans-serif",
           fontSize: "14px",
-          padding: "3em",
           marginBottom: "2rem",
         }}
       >
@@ -155,7 +226,7 @@ const Calendar = () => {
               display: "flex",
               alignItems: "center",
               fontSize: "16px",
-              color: "white",
+              color: "black",
             }}
           >
             <input
@@ -181,7 +252,9 @@ const Calendar = () => {
           dayMaxEvents={true}
           weekends={weekendsVisible}
           initialEvents={INITIAL_EVENTS}
-          select={handleDateSelect}
+          select={
+            session.session.user.role === "admin" ? handleDateSelect : null
+          }
           // eventContent={renderEventContent} // custom render function
           eventClick={handleEventClick}
           // eventsSet={handleEvents} // called after events are initialized/added/changed/removed
