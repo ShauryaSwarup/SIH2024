@@ -48,17 +48,17 @@ const ChatBox = ({ fn, id, ruid, addMessage, onUserMessage }) => {
 					onChange={(event) => setValue(event.currentTarget.value)}
 					style={{ flexGrow: 1 }}
 					placeholder="Say something nice . . . "
-					rightSection={
-						<ActionIcon
-							onClick={() =>
-								toast("Display only hehe", {
-									icon: "😁",
-								})
-							}
-						>
-							<MoodHappy />
-						</ActionIcon>
-					}
+					// rightSection={
+					// 	<ActionIcon
+					// 		onClick={() =>
+					// 			toast("Display only hehe", {
+					// 				icon: "😁",
+					// 			})
+					// 		}
+					// 	>
+					// 		<MoodHappy />
+					// 	</ActionIcon>
+					// }
 					onKeyDown={
 						!/\S/.test(value)
 							? undefined

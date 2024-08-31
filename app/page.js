@@ -7,6 +7,7 @@ import React from "react";
 import { Fragment } from "react";
 import { CgMouse } from "react-icons/cg";
 import eventsData from "../components/Home/EventsData.json";
+import SignUp from "@/components/SignUp";
 
 async function page() {
   const session = await auth();
@@ -23,6 +24,7 @@ async function page() {
               <MetaData title="OAGMS" />
               <div className="banner">
                 <p>Welcome to Sarathi</p>
+                <SignUp/>
                 <h1>BEST HANDPICKED EVENTS ARE AWAITING YOU</h1>
 
                 <a href="#container">
@@ -53,3 +55,5 @@ async function page() {
 }
 
 export default page;
+
+

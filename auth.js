@@ -4,26 +4,26 @@ import clientPromise from "./lib/mongoclient";
 import authConfig from "./auth.config.ts";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  adapter: MongoDBAdapter(clientPromise),
-  callbacks: {
-    async jwt({ token, user, trigger, session }) {
-      if (user) {
-        token.role = user.role;
-        token.id = user.id;
-      }
-      if (trigger === "update" && session?.name) {
-        token.name = session.name;
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      session.user.role = token.role;
-      session.user.id = token.id;
-      return session;
-    },
-  },
-  session: {
-    strategy: "jwt",
-  },
-  ...authConfig,
+	adapter: MongoDBAdapter(clientPromise),
+	callbacks: {
+		async jwt({ token, user, trigger, session }) {
+			if (user) {
+				token.role = user.role;
+				token.id = user.id;
+			}
+			if (trigger === "update" && session?.name) {
+				token.name = session.name;
+			}
+			return token;
+		},
+		async session({ session, token }) {
+			session.user.role = token.role;
+			session.user.id = token.id;
+			return session;
+		},
+	},
+	session: {
+		strategy: "jwt",
+	},
+	...authConfig,
 });

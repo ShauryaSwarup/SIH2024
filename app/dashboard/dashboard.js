@@ -4,7 +4,7 @@ export default function Dashboard() {
   return (
     <iframe
       style={{
-        background: '#F1F5F4',
+        // background: '#F1F5F4',
         border: 'none',
         borderRadius: '2px',
         boxShadow: '0 2px 10px 0 rgba(70, 76, 79, .2)',
