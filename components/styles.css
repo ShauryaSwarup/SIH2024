@@ -1,0 +1,42 @@
+/* styles.css */
+
+.navButton {
+    color: white;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 5px;
+}
+
+.navButton:hover {
+    text-decoration: underline;
+    color: #cccccc;
+    /* Lighter gray color for hover effect */
+    font-size: 18px;
+    /* Larger font size on hover */
+}
+
+.navbarGroup {
+    display: flex;
+    justify-content: space-between;
+    flex: 1;
+}
+
+.navbarLinks {
+    margin-left: var(--mantine-spacing-xl);
+    gap: 20px;
+    display: flex;
+}
+
+.navbarButton {
+    display: block;
+    padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
+    border-radius: var(--mantine-radius-md);
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.navbarButton:hover {
+    background-color: var(--mantine-color-gray-1);
+    /* Example light-gray background on hover */
+}
