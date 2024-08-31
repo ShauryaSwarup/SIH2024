@@ -15,29 +15,24 @@ const ChatBox = ({ fn, id, ruid, addMessage, onUserMessage }) => {
 
 	const sendMessage = () => {
 		if (user) {
-			if (value.length > 100) {
-				toast.error("Must not exceed 100 characters");
-				setValue("");
-			} else {
-				const newMessage = {
-					id: Math.random().toString(36).substr(2, 9), // Unique ID for the message
-					text: value,
-					createdAt: new Date(), // Use the current date for simulation
-					uid: user.uid,
-					photoURL: user.photoURL,
-					deleted: false,
-					repliedTo: id || null,
-					ruid: ruid ? ruid.senderUid : null,
-					rtext: ruid ? ruid.msgText : null,
-				};
+			const newMessage = {
+				id: Math.random().toString(36).substr(2, 9), // Unique ID for the message
+				text: value,
+				createdAt: new Date(), // Use the current date for simulation
+				uid: user.uid,
+				photoURL: user.photoURL,
+				deleted: false,
+				repliedTo: id || null,
+				ruid: ruid ? ruid.senderUid : null,
+				rtext: ruid ? ruid.msgText : null,
+			};
 
-				// Call the onUserMessage function passed as a prop
-				onUserMessage(value);
+			// Call the onUserMessage function passed as a prop
+			onUserMessage(value);
 
-				// Clear the input field and scroll to the bottom
-				setValue("");
-				fn(); // Call the goBot function to scroll to the bottom
-			}
+			// Clear the input field and scroll to the bottom
+			setValue("");
+			fn(); // Call the goBot function to scroll to the bottom
 		}
 	};
 
@@ -67,7 +62,7 @@ const ChatBox = ({ fn, id, ruid, addMessage, onUserMessage }) => {
 					onKeyDown={
 						!/\S/.test(value)
 							? undefined
-							: value.length < 2
+							: value.length < 0
 							? undefined
 							: getHotkeyHandler([["Enter", sendMessage]])
 					}

@@ -2,6 +2,7 @@ import {
 	ActionIcon,
 	Alert,
 	Avatar,
+	Button,
 	Card,
 	Collapse,
 	Group,
@@ -92,7 +93,14 @@ export default function ChatMessage({
 								Message removed
 							</Text>
 						) : (
-							text
+							<Text
+								style={{
+									wordWrap: "break-word",
+									whiteSpace: "pre-wrap",
+								}}
+							>
+								{text}
+							</Text>
 						)}
 					</Alert>
 				</Group>
@@ -106,7 +114,12 @@ export default function ChatMessage({
 					</Text>
 				</Collapse>
 				{message.type === "table" && (
-					<Card shadow="xs" padding="md" radius="md" style={{ marginTop: "8px" }}>
+					<Card
+						shadow="xs"
+						padding="md"
+						radius="md"
+						style={{ marginTop: "8px" }}
+					>
 						<table>
 							<tbody>
 								<tr>
@@ -137,6 +150,12 @@ export default function ChatMessage({
 						</table>
 					</Card>
 				)}
+				{message.suggestedReplies &&
+					message.suggestedReplies.map((reply, index) => (
+						<Button key={index} variant="outline" radius="xl">
+							{reply}
+						</Button>
+					))}
 			</Stack>
 		</Group>
 	);
