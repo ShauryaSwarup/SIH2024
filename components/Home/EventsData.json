@@ -1,0 +1,46 @@
+{
+  "events": [
+    {
+      "title": "Face of Horror",
+      "rating": 4.5,
+      "price": 500,
+      "poster": "images/FaceOfHorror.png"
+    },
+    {
+      "title": "Abstracto atiste",
+      "rating": 4.2,
+      "price": 600,
+      "poster": "/images/AbstractoAtiste.png"
+    },
+    {
+      "title": "Cloud of Colors",
+      "rating": 4.8,
+      "price": 700,
+      "poster": "images/CloudOfColors.png"
+    },
+    {
+      "title": "The Art of War",
+      "rating": 4.7,
+      "price": 800,
+      "poster": "images/TheArtOfWar.png"
+    },
+    {
+      "title": "Peotry Evening by RK",
+      "rating": 4.9,
+      "price": 900,
+      "poster": "images/PeotryEvening.png"
+    },
+    {
+      "title": "Every Brilliant Thing",
+      "rating": 4.6,
+      "price": 1000,
+      "poster": "images/EveryBrilliantThing.png"
+    },
+    {
+      "title": "Hirji Jehangir Art Gallery Show",
+      "rating": 4.4,
+      "price": 1100,
+      "poster": "images/ArtGalleryShow.png"
+    }
+  ]
+}
