@@ -37,9 +37,11 @@ export function AppShellComponent({ children }) {
 									Chat
 								</UnstyledButton>
 							</Link>
-							<UnstyledButton className={classes.control}>
-								Contacts
-							</UnstyledButton>
+							<Link href="/dashboard" passHref>
+								<UnstyledButton className={classes.control}>
+									Dashboard
+								</UnstyledButton>
+							</Link>
 							<UnstyledButton className={classes.control}>
 								Support
 							</UnstyledButton>
@@ -55,7 +57,9 @@ export function AppShellComponent({ children }) {
 				<Link href="/chat" passHref>
 					<UnstyledButton className={classes.control}>Chat</UnstyledButton>
 				</Link>
-				<UnstyledButton className={classes.control}>Contacts</UnstyledButton>
+				<Link href="/dashboard" passHref>
+				<UnstyledButton className={classes.control}>Dashboard</UnstyledButton>
+				</Link>
 				<UnstyledButton className={classes.control}>Support</UnstyledButton>
 			</AppShell.Navbar>
 

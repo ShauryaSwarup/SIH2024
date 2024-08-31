@@ -12,7 +12,7 @@ const EventSchema = new mongoose.Schema(
 		// totalSeats: { type: Number, required: true },
 		availableSeats: { type: Number },
 		ticketPrice: { type: Number, required: true },
-		category: { type: String, enum: ["museum", "event"] },
+		category: { type: String, enum: ["museum", "event", "history", "science", "architecture", "culture", "arts and crafts", "fashion", "photography", "technology", "music"] },
 	},
 	{ timestamps: true }
 );

@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "seed": "node app/api/seed/mongo_data.js"
+    "seed": "node app/api/seed/event-booking.js"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.4.2",
