@@ -1,121 +1,131 @@
 import connectMongo from "@/lib/mongoose";
-import Event from "@/models/Event"; // Import your Event model
+import Event from "@/models/Event";
+
+export async function GET() {
+  try {
+    await connectMongo();
+
+    const events = await Event.find({});
+
+    return new Response(JSON.stringify({ events }), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching events:", error);
+    return new Response(
+      JSON.stringify({
+        message: "Failed to fetch events",
+        error: error.message,
+      }),
+      {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  }
+}
 
 export async function POST(req) {
-	try {
-		// Connect to the database
-		await connectMongo();
+  try {
+    await connectMongo();
 
-		const body = await req.json();
-		const { title, description, startDate, endDate, startTime, endTime } = body;
+    const body = await req.json();
+    const { title, description, startDate, endDate, startTime, endTime } = body;
+    console.log("body" + body);
 
-		// Validate the incoming data
-		if (!title || !startDate || !endDate || !startTime || !endTime) {
-			return new Response(
-				JSON.stringify({ message: "Missing required fields" }),
-				{ status: 400 }
-			);
-		}
+    if (!title || !startDate || !endDate || !startTime || !endTime) {
+      return new Response(
+        JSON.stringify({ message: "Missing required fields" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
 
-		// Ensure the dates are valid and in the correct format
-		const start = new Date(startDate);
-		const end = new Date(endDate);
-		if (isNaN(start) || isNaN(end)) {
-			return new Response(JSON.stringify({ message: "Invalid date format" }), {
-				status: 400,
-			});
-		}
+    const newEvent = new Event({
+      name: title,
+      description: description || "No description provided",
+      startDate: new Date(startDate),
+      endDate: new Date(endDate),
+      startTime,
+      endTime,
+      // availableSeats: 100, // Default value
+      ticketPrice: 20, // Default value
+      // category: "event", // Default category
+    });
 
-		// Create a new event
-		const newEvent = new Event({
-			name: title,
-			description: description || "No description provided",
-			startDate: start,
-			endDate: end,
-			startTime,
-			endTime,
-		});
+    await newEvent.save();
 
-		// Save the event to the database
-		await newEvent.save();
-
-		return new Response(
-			JSON.stringify({
-				message: "Event created successfully",
-				event: newEvent,
-			}),
-			{ status: 201 }
-		);
-	} catch (error) {
-		console.error("Error creating event:", error);
-		return new Response(JSON.stringify({ message: "Failed to create event" }), {
-			status: 500,
-		});
-	}
+    return new Response(
+      JSON.stringify({
+        message: "Event created successfully",
+        event: newEvent,
+      }),
+      {
+        status: 201,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  } catch (error) {
+    console.error("Error creating event:", error);
+    return new Response(
+      JSON.stringify({
+        message: "Failed to create event",
+        error: error.message,
+      }),
+      {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  }
 }
 
-// GET Route - Retrieve all events
-export async function GET(req) {
-	try {
-		// Connect to the database
-		await connectMongo();
+export async function DELETE(req) {
+  try {
+    await connectMongo();
 
-		// Fetch all events from the database
-		const events = await Event.find({});
+    const { id } = await req.json();
+    console.log("id in api" + id);
 
-		return new Response(
-			JSON.stringify({
-				message: "Events retrieved successfully",
-				events: events,
-			}),
-			{ status: 200 }
-		);
-	} catch (error) {
-		console.error("Error retrieving events:", error);
-		return new Response(
-			JSON.stringify({ message: "Failed to retrieve events" }),
-			{ status: 500 }
-		);
-	}
-}
-export async function GET(req, { params }) {
-	try {
-		// Connect to the database
-		await connectMongo();
+    if (!id) {
+      return new Response(JSON.stringify({ message: "Event ID is required" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
 
-		// Extract the event ID from the URL params
-		const { id } = params;
+    await Event.findByIdAndDelete(id);
 
-		// Validate the ObjectId
-		if (!ObjectId.isValid(id)) {
-			return new Response(JSON.stringify({ message: "Invalid event ID" }), {
-				status: 400,
-			});
-		}
-
-		// Find the event by its ObjectId
-		const event = await Event.findById(id);
-
-		if (!event) {
-			return new Response(JSON.stringify({ message: "Event not found" }), {
-				status: 404,
-			});
-		}
-
-		return new Response(
-			JSON.stringify({
-				message: "Event retrieved successfully",
-				event: event,
-			}),
-			{ status: 200 }
-		);
-	} catch (error) {
-		console.error("Error retrieving event:", error);
-		return new Response(
-			JSON.stringify({ message: "Failed to retrieve event" }),
-			{
-				status: 500,
-			}
-		);
-	}
+    return new Response(
+      JSON.stringify({ message: "Event deleted successfully" }),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  } catch (error) {
+    console.error("Error deleting event:", error);
+    return new Response(
+      JSON.stringify({
+        message: "Failed to delete event",
+        error: error.message,
+      }),
+      {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  }
 }
