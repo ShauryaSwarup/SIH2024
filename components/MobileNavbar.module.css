@@ -3,9 +3,19 @@
     padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
     border-radius: var(--mantine-radius-md);
     font-weight: 500;
+    color: white;
+    /* Set text color to white */
+    font-size: 16px;
+    /* Default font size */
+    transition: all 0.3s ease;
+    /* Smooth transition for hover effects */
+}
 
-
-    @mixin hover {
-        background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
-    }
+.control:hover {
+    color: #e0e0e0;
+    /* Darker color on hover */
+    text-decoration: underline;
+    /* Underline text on hover */
+    font-size: 18px;
+    /* Increase font size on hover */
 }
