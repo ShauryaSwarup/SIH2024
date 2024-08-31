@@ -15,7 +15,7 @@ import ChatBox from "./ChatBox";
 import ChatMessage from "./ChatMessage";
 import Loading from "./Loading";
 import NavBar from "./NavBar";
-import axios from "axios"; // Import axios for making API requests
+import axios from "axios";
 import { useSession } from "next-auth/react";
 
 const ChatRoom = () => {
@@ -26,107 +26,99 @@ const ChatRoom = () => {
 	const [currentSuggestedReplies, setCurrentSuggestedReplies] = useState([]);
 	const dummy = useRef(null);
 	const [replyInfo, setReplyInfo] = useState([]);
-	const [id, setId] = useState("");
-	const [ruid, setRuid] = useState("");
+	const [messageList, setMessageList] = useState([]);
 	const [hidden, setHidden] = useState(true);
+	const [userInitiated, setUserInitiated] = useState(false); // New state variable
 	const { ref, inView } = useInView({
 		delay: 600,
 		threshold: 1,
 	});
+	useEffect(() => {
+		initializeChat();
+	}, []);
 
 	useEffect(() => {
-		fetchQuestion(currentQuestionIndex);
-	}, [currentQuestionIndex]);
-
-	useEffect(() => {
-		goBot();
+		if (userInitiated) {
+			// Check if the message was user-initiated
+			handleChatInteraction();
+			setUserInitiated(false); // Reset after handling interaction
+		}
 	}, [mes]);
-	const [lastFetchedMessage, setLastFetchedMessage] = useState(null);
 
-	// Define the total number of questions (assuming 5 for this example)
-	const totalQuestions = 5;
-
-	// Fetch question based on the index
-	const fetchQuestion = async (index) => {
+	const initializeChat = async () => {
 		try {
-			const response = await axios.get(`/api/questions?index=${index}`);
+			const response = await axios.post(
+				"https://ab7a-103-71-19-172.ngrok-free.app/chat/new/"
+			);
+
 			if (response.status === 200) {
-				const question = response.data;
+				const responseData = response.data;
+				const messageList = responseData.message_list;
 
-				// Check if the question has already been added or is the same as the last fetched message
-				const isQuestionAlreadyAdded = mes.some(
-					(msg) => msg.text === question.text && msg.uid === "bot"
-				);
+				if (messageList && messageList.length > 0) {
+					const lastMessageObject = messageList[messageList.length - 1];
 
-				// Check if the new question is the same as the last fetched question
-				const isSameAsLastFetchedMessage =
-					lastFetchedMessage?.text === question.text;
+					if (lastMessageObject && lastMessageObject.content) {
+						const parsedContent = JSON.parse(lastMessageObject.content.trim());
 
-				if (!isQuestionAlreadyAdded && !isSameAsLastFetchedMessage) {
-					setMes((prevMessages) => [
-						...prevMessages,
-						{ text: question.text, type: question.type, uid: "bot" },
-					]);
-					setCurrentSuggestedReplies(question.suggestedReplies);
-					setLastFetchedMessage({
-						text: question.text,
-						type: question.type,
-						uid: "bot",
-					});
+						setMessageList(messageList);
+						addMessage({ text: parsedContent.response, uid: "bot" });
+						setCurrentSuggestedReplies(parsedContent.suggested);
+					} else {
+						console.error(
+							"Last message object does not contain valid content or is improperly accessed."
+						);
+					}
 				}
-
 				setLoading(false);
-
-				// If this is the last question, trigger the email
-				if (index === totalQuestions - 1) {
-					sendEmailConfirmation();
-				}
 			}
 		} catch (error) {
-			console.error("Error fetching question:", error);
+			console.error("Error initializing chat:", error);
 			setLoading(false);
 		}
 	};
 
-	// if(session)console.log("email = ", session.user.email);
-	// Function to send email confirmation
-	const sendEmailConfirmation = async () => {
+	const handleUserMessage = (userMessage) => {
+		addMessage({ text: userMessage, uid: "user" });
+		setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+		setUserInitiated(true); // Mark that the message was user-initiated
+	};
+
+	const addMessage = (newMessage) => {
+		setMes((prevMes) => [...prevMes, newMessage]);
+		goBot();
+	};
+
+	const handleChatInteraction = async () => {
 		try {
-			const response = await axios.post("/api/send-email", {
-				to: session.user.email, // Send email to the logged-in user
-				subject: "All Questions Answered",
-				message:
-					"Congratulations! You have successfully answered all the questions.",
-			});
+			const userMessage = mes[mes.length - 1].text;
+
+			const response = await axios.post(
+				"https://ab7a-103-71-19-172.ngrok-free.app/chat/",
+				{
+					message_list: messageList,
+					query: userMessage,
+				}
+			);
+
 			if (response.status === 200) {
-				console.log("Email sent successfully");
-			} else {
-				console.error("Failed to send email");
+				const data = response.data;
+				const lastMessage = data.message_list[data.message_list.length - 1];
+				const parsedContent = JSON.parse(lastMessage.content.trim());
+
+				setMessageList(data.message_list);
+				setCurrentSuggestedReplies(parsedContent.suggested);
+				addMessage({ text: parsedContent.response, uid: "bot" });
 			}
 		} catch (error) {
-			console.error("Error sending email:", error);
+			console.error("Error handling chat interaction:", error);
 		}
 	};
 
-	// Handle user message submission
-	const handleUserMessage = (userMessage) => {
-		addMessage({ text: userMessage, uid: "user" });
-
-		// Move to the next question
-		setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
-	};
-
-	// Add a new message to the chat
-	const addMessage = (newMessage) => {
-		setMes((prevMes) => [...prevMes, newMessage]);
-		goBot(); // To scroll to the bottom after adding a new message
-	};
-
-	function goBot() {
+	const goBot = () => {
 		dummy.current?.scrollIntoView({ behavior: "smooth" });
 		setHidden(true);
-		setId("");
-	}
+	};
 
 	if (!session) {
 		return <div>Please sign in to access the chat.</div>;
@@ -176,7 +168,6 @@ const ChatRoom = () => {
 								withCloseButton
 								onClose={() => {
 									setHidden(true);
-									setId("");
 								}}
 							>
 								{data.text}
@@ -200,8 +191,6 @@ const ChatRoom = () => {
 					</Stack>
 					<ChatBox
 						fn={goBot}
-						id={id}
-						ruid={ruid}
 						addMessage={addMessage}
 						onUserMessage={handleUserMessage}
 					/>
