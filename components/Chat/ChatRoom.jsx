@@ -33,6 +33,7 @@ const ChatRoom = () => {
 		delay: 600,
 		threshold: 1,
 	});
+
 	useEffect(() => {
 		initializeChat();
 	}, []);
@@ -174,13 +175,14 @@ const ChatRoom = () => {
 							</Alert>
 						))}
 
-						{currentSuggestedReplies.length > 0 && (
+						{currentSuggestedReplies && currentSuggestedReplies.length > 0 && (
 							<Group position="center" style={{ marginBottom: "8px" }}>
 								{currentSuggestedReplies.map((reply, index) => (
 									<Button
 										key={index}
 										variant="outline"
 										radius="xl"
+										color="black"
 										onClick={() => handleUserMessage(reply)}
 									>
 										{reply}

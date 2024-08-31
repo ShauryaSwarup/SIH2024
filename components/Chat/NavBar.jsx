@@ -35,21 +35,21 @@ const NavBar = () => {
 				style={{ height: "10vh", alignItems: "center" }}
 				noWrap
 			>
-				<Avatar
+				{/* <Avatar
 					// component={Link}
 					to={`/user/1`} // Replace with hardcoded user ID
 					src={session.user.image} // Replace with hardcoded photo URL
 					radius="xl"
-				/>
+				/> */}
 				<Text
 					variant="gradient"
-					gradient={{ from: "grape", to: "cyan", deg: 90 }}
+					gradient={{ from: "black", to: "gray", deg: 70 }}
 				>
 					<Group align="center" noWrap spacing={3}>
 						<UnstyledButton>
-							<Title>{session.user.name}</Title>
+							<Title>Sarathi Chatbot</Title>
 						</UnstyledButton>
-						<MessageCircle color="#4dabf7" size={30} />
+						{/* <MessageCircle color="#4dabf7" size={30} /> */}
 					</Group>
 				</Text>
 				{/* <DarkMode /> */}

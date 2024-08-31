@@ -12,12 +12,11 @@ async function SignUp() {
 				<>
 					<UserAvatar />
 					<SignOut />
-					<div>{session.user.name}</div>
+					<div className="text-white">{session.user.name}</div>
 				</>
 			) : (
 				<SignIn />
 			)}
-			<div className=" bg-black text-blue-50">hello</div>
 		</>
 	);
 }

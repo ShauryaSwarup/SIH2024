@@ -81,7 +81,7 @@ export default function ChatMessage({
 					noWrap
 				>
 					<Alert
-						color={color || "blue"}
+						color={color || "#6c757d"}
 						radius="lg"
 						py={8}
 						variant={deleted ? "outline" : "light"}
@@ -89,7 +89,7 @@ export default function ChatMessage({
 						style={{ textAlign: isUserMessage ? "right" : "left" }}
 					>
 						{deleted ? (
-							<Text color={color || "blue"} size="xs">
+							<Text color={color || "#6c757d"} size="xs">
 								Message removed
 							</Text>
 						) : (
