@@ -9,6 +9,7 @@ const BookingSchema = new mongoose.Schema(
 			ref: "Event",
 			required: true,
 		},
+		amount: {type: Number, required: true},
 		numberOfTickets: { type: Number, required: true, min: 1 },
 		srCitizenTickets: { type: Number, default: 0 },
 		childTickets: { type: Number, default: 0 },
