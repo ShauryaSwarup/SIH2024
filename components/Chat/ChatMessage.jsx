@@ -11,7 +11,7 @@ import {
 	Tooltip,
 } from "@mantine/core";
 import { useState } from "react";
-import { CornerUpLeft, Trash } from "tabler-icons-react";
+import { CornerUpLeft, Trash, Volume2 } from "tabler-icons-react";
 
 export default function ChatMessage({
 	message, // This will be the message object passed from ChatRoom
@@ -38,6 +38,14 @@ export default function ChatMessage({
 	const reply = () => {
 		// Functionality for reply
 		console.log("Reply clicked");
+	};
+
+	const speakMessage = () => {
+		const utterance = new SpeechSynthesisUtterance(text);
+		utterance.pitch = 1;
+		utterance.rate = 1;
+		utterance.volume = 1;
+		window.speechSynthesis.speak(utterance);
 	};
 
 	// Determine alignment based on user ID
@@ -93,14 +101,31 @@ export default function ChatMessage({
 								Message removed
 							</Text>
 						) : (
-							<Text
-								style={{
-									wordWrap: "break-word",
-									whiteSpace: "pre-wrap",
-								}}
-							>
-								{text}
-							</Text>
+							<div style={{ position: "relative" }}>
+								<Text
+								className="mb-2"
+									style={{
+										wordWrap: "break-word",
+										whiteSpace: "pre-wrap",
+										paddingBottom: "30px", // Add padding to ensure space for button
+									}}
+								>
+									{text}
+								</Text>
+								<ActionIcon
+									variant="outline"
+									color="black"
+									className=" "
+									onClick={speakMessage}
+									style={{
+										position: "absolute",
+										bottom: "8px",
+										right: "8px",
+									}}
+								>
+									<Volume2 size={16} />
+								</ActionIcon>
+							</div>
 						)}
 					</Alert>
 				</Group>
@@ -156,6 +181,7 @@ export default function ChatMessage({
 							{reply}
 						</Button>
 					))}
+				{/* Add Text-to-Speech Button */}
 			</Stack>
 		</Group>
 	);
